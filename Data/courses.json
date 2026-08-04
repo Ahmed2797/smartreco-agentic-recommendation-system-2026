@@ -1,0 +1,702 @@
+[
+  {
+    "id": 1,
+    "title": "Machine Learning Specialization",
+    "description": "Master fundamental AI concepts and practical machine learning skills from Andrew Ng.",
+    "category": "Artificial Intelligence",
+    "price": 49.99
+  },
+  {
+    "id": 2,
+    "title": "Deep Learning Specialization",
+    "description": "Build and train Deep Neural Networks, CNNs, RNNs, LSTMs, and Transformers.",
+    "category": "Artificial Intelligence",
+    "price": 79.99
+  },
+  {
+    "id": 3,
+    "title": "Generative AI with Large Language Models",
+    "description": "Learn the fundamentals of Generative AI, LLM fine-tuning, RAG, and deployment.",
+    "category": "Artificial Intelligence",
+    "price": 89.99
+  },
+  {
+    "id": 4,
+    "title": "LangChain & LlamaIndex for LLM Apps",
+    "description": "Build end-to-end LLM applications, custom agents, and RAG architectures.",
+    "category": "Artificial Intelligence",
+    "price": 69.99
+  },
+  {
+    "id": 5,
+    "title": "AI Engineering & Multi-Agent Systems",
+    "description": "Master LangGraph, AutoGen, and CrewAI for autonomous multi-agent systems.",
+    "category": "Artificial Intelligence",
+    "price": 99.99
+  },
+  {
+    "id": 6,
+    "title": "Computer Vision & OpenCV Fundamentals",
+    "description": "Learn image processing, object detection, YOLO, and real-time vision algorithms.",
+    "category": "Artificial Intelligence",
+    "price": 59.99
+  },
+  {
+    "id": 7,
+    "title": "Natural Language Processing (NLP) in Python",
+    "description": "Text processing, sentiment analysis, spaCy, HuggingFace Transformers, and BERT.",
+    "category": "Artificial Intelligence",
+    "price": 64.99
+  },
+  {
+    "id": 8,
+    "title": "Reinforcement Learning Mastery",
+    "description": "Q-Learning, Deep Q-Networks (DQN), and Policy Gradients with OpenAI Gym.",
+    "category": "Artificial Intelligence",
+    "price": 74.99
+  },
+  {
+    "id": 9,
+    "title": "PyTorch for Deep Learning Bootcamp",
+    "description": "Learn PyTorch from scratch to build advanced neural network models.",
+    "category": "Artificial Intelligence",
+    "price": 54.99
+  },
+  {
+    "id": 10,
+    "title": "TensorFlow 2 Developer Certificate",
+    "description": "Get certified in TensorFlow and build production-ready machine learning models.",
+    "category": "Artificial Intelligence",
+    "price": 59.99
+  },
+  {
+    "id": 11,
+    "title": "Full Stack Web Development with React & Node",
+    "description": "Build complete full-stack web applications with React, Express, and MongoDB.",
+    "category": "Web Development",
+    "price": 44.99
+  },
+  {
+    "id": 12,
+    "title": "FastAPI & Modern Python Microservices",
+    "description": "Build lightning-fast RESTful APIs with Python 3, FastAPI, and SQLAlchemy.",
+    "category": "Web Development",
+    "price": 34.99
+  },
+  {
+    "id": 13,
+    "title": "Next.js 14 & React Server Components",
+    "description": "Master server-side rendering, App Router, and full-stack Next.js applications.",
+    "category": "Web Development",
+    "price": 49.99
+  },
+  {
+    "id": 14,
+    "title": "Vue.js 3 & Nuxt Mastery",
+    "description": "Comprehensive guide to building modern reactive user interfaces with Vue 3.",
+    "category": "Web Development",
+    "price": 39.99
+  },
+  {
+    "id": 15,
+    "title": "Django & Django REST Framework Bootcamp",
+    "description": "Build scalable web backends and robust APIs with Python Django.",
+    "category": "Web Development",
+    "price": 49.99
+  },
+  {
+    "id": 16,
+    "title": "Angular & RxJS Front-End Engineering",
+    "description": "Enterprise web application development using Angular, TypeScript, and RxJS.",
+    "category": "Web Development",
+    "price": 54.99
+  },
+  {
+    "id": 17,
+    "title": "Tailwind CSS & Modern Responsive Design",
+    "description": "Craft beautiful, modern, utility-first user interfaces fast with Tailwind.",
+    "category": "Web Development",
+    "price": 24.99
+  },
+  {
+    "id": 18,
+    "title": "GraphQL & Apollo Client Architecture",
+    "description": "Build efficient and flexible APIs with GraphQL, Node.js, and Apollo.",
+    "category": "Web Development",
+    "price": 44.99
+  },
+  {
+    "id": 19,
+    "title": "WebSockets & Real-Time Web Apps",
+    "description": "Build real-time chat, notifications, and multiplayer games with Socket.io.",
+    "category": "Web Development",
+    "price": 29.99
+  },
+  {
+    "id": 20,
+    "title": "TypeScript Complete Developer Guide",
+    "description": "Master TypeScript to write clean, type-safe JavaScript applications.",
+    "category": "Web Development",
+    "price": 39.99
+  },
+  {
+    "id": 21,
+    "title": "Data Science Professional Certificate",
+    "description": "Master Data Analysis, Visualization, SQL, Python, and Machine Learning.",
+    "category": "Data Science",
+    "price": 89.99
+  },
+  {
+    "id": 22,
+    "title": "Python for Data Science and Data Analysis",
+    "description": "Pandas, NumPy, Matplotlib, Seaborn, and Exploratory Data Analysis (EDA).",
+    "category": "Data Science",
+    "price": 39.99
+  },
+  {
+    "id": 23,
+    "title": "Advanced SQL for Data Analytics",
+    "description": "Master complex joins, window functions, CTEs, and query optimization.",
+    "category": "Data Science",
+    "price": 34.99
+  },
+  {
+    "id": 24,
+    "title": "Data Engineering with Apache Spark & Delta Lake",
+    "description": "Build big data pipelines using PySpark, Databricks, and Lakehouse architecture.",
+    "category": "Data Science",
+    "price": 79.99
+  },
+  {
+    "id": 25,
+    "title": "Power BI & Business Intelligence Masterclass",
+    "description": "Transform data into interactive dashboards with DAX and Power BI.",
+    "category": "Data Science",
+    "price": 29.99
+  },
+  {
+    "id": 26,
+    "title": "Tableau for Data Visualization Professional",
+    "description": "Create stunning visual analytics, stories, and executive dashboards.",
+    "category": "Data Science",
+    "price": 34.99
+  },
+  {
+    "id": 27,
+    "title": "Time Series Analysis & Forecasting in Python",
+    "description": "ARIMA, Prophet, and LSTM models for financial and sales forecasting.",
+    "category": "Data Science",
+    "price": 49.99
+  },
+  {
+    "id": 28,
+    "title": "Statistics & A/B Testing for Data Scientists",
+    "description": "Hypothesis testing, confidence intervals, regression, and experimental design.",
+    "category": "Data Science",
+    "price": 44.99
+  },
+  {
+    "id": 29,
+    "title": "Data Pipeline Engineering with Airflow",
+    "description": "Orchestrate, schedule, and monitor complex data workflows with Apache Airflow.",
+    "category": "Data Science",
+    "price": 59.99
+  },
+  {
+    "id": 30,
+    "title": "Feature Engineering & Data Preprocessing",
+    "description": "Prepare messy real-world data for high-performance ML models.",
+    "category": "Data Science",
+    "price": 29.99
+  },
+  {
+    "id": 31,
+    "title": "AWS Certified Solutions Architect Associate",
+    "description": "Master AWS services: EC2, S3, RDS, Lambda, VPC, and CloudFormation.",
+    "category": "Cloud & DevOps",
+    "price": 69.99
+  },
+  {
+    "id": 32,
+    "title": "Docker & Kubernetes: The Complete Guide",
+    "description": "Containerize applications and deploy microservices with Kubernetes.",
+    "category": "Cloud & DevOps",
+    "price": 54.99
+  },
+  {
+    "id": 33,
+    "title": "Terraform Infrastructure as Code (IaC)",
+    "description": "Automate cloud infrastructure provisioning on AWS, Azure, and GCP.",
+    "category": "Cloud & DevOps",
+    "price": 44.99
+  },
+  {
+    "id": 34,
+    "title": "CI/CD Pipelines with GitHub Actions & GitLab",
+    "description": "Build automated testing, build, and deployment pipelines.",
+    "category": "Cloud & DevOps",
+    "price": 39.99
+  },
+  {
+    "id": 35,
+    "title": "Google Cloud Platform (GCP) Engineer",
+    "description": "Deploy, monitor, and manage cloud applications on GCP.",
+    "category": "Cloud & DevOps",
+    "price": 64.99
+  },
+  {
+    "id": 36,
+    "title": "Azure Fundamentals (AZ-900) & Administrator",
+    "description": "Learn Microsoft Azure core concepts, networking, and governance.",
+    "category": "Cloud & DevOps",
+    "price": 49.99
+  },
+  {
+    "id": 37,
+    "title": "Linux System Administration & Shell Scripting",
+    "description": "Master Linux CLI, bash scripting, server management, and security.",
+    "category": "Cloud & DevOps",
+    "price": 29.99
+  },
+  {
+    "id": 38,
+    "title": "Prometheus & Grafana Observability",
+    "description": "Monitor production systems, set up metrics, and build Grafana dashboards.",
+    "category": "Cloud & DevOps",
+    "price": 44.99
+  },
+  {
+    "id": 39,
+    "title": "Site Reliability Engineering (SRE) Principles",
+    "description": "Learn SLAs, SLOs, incident response, and chaos engineering.",
+    "category": "Cloud & DevOps",
+    "price": 59.99
+  },
+  {
+    "id": 40,
+    "title": "Serverless Architectures with AWS Lambda",
+    "description": "Build scalable event-driven applications without managing servers.",
+    "category": "Cloud & DevOps",
+    "price": 39.99
+  },
+  {
+    "id": 41,
+    "title": "Ethical Hacking & Penetration Testing",
+    "description": "Learn network scanning, web application exploitation, and privilege escalation.",
+    "category": "Cyber Security",
+    "price": 59.99
+  },
+  {
+    "id": 42,
+    "title": "CompTIA Security+ Certification Prep",
+    "description": "Master cybersecurity basics: threats, vulnerabilities, and defenses.",
+    "category": "Cyber Security",
+    "price": 49.99
+  },
+  {
+    "id": 43,
+    "title": "Web Application Security & OWASP Top 10",
+    "description": "Identify and prevent SQL Injection, XSS, CSRF, and broken authentication.",
+    "category": "Cyber Security",
+    "price": 44.99
+  },
+  {
+    "id": 44,
+    "title": "Network Security & Wireshark Fundamentals",
+    "description": "Analyze network traffic, inspect packets, and secure enterprise networks.",
+    "category": "Cyber Security",
+    "price": 34.99
+  },
+  {
+    "id": 45,
+    "title": "Digital Forensics & Incident Response",
+    "description": "Investigate cyber breaches, analyze malware, and preserve digital evidence.",
+    "category": "Cyber Security",
+    "price": 64.99
+  },
+  {
+    "id": 46,
+    "title": "Certified Information Systems Security Professional (CISSP)",
+    "description": "Enterprise security management, risk assessment, and cryptography.",
+    "category": "Cyber Security",
+    "price": 99.99
+  },
+  {
+    "id": 47,
+    "title": "Cloud Security Architecture & CCSP Prep",
+    "description": "Secure cloud workloads across AWS, Azure, and Google Cloud.",
+    "category": "Cyber Security",
+    "price": 79.99
+  },
+  {
+    "id": 48,
+    "title": "Practical Cryptography for Developers",
+    "description": "Learn symmetric/asymmetric encryption, hashing, digital signatures, and TLS.",
+    "category": "Cyber Security",
+    "price": 39.99
+  },
+  {
+    "id": 49,
+    "title": "DevSecOps: Integrating Security into CI/CD",
+    "description": "Automate security scanning, SAST/DAST tools, and container security.",
+    "category": "Cyber Security",
+    "price": 54.99
+  },
+  {
+    "id": 50,
+    "title": "Zero Trust Security Architecture",
+    "description": "Implement modern network access control, IAM, and micro-segmentation.",
+    "category": "Cyber Security",
+    "price": 69.99
+  },
+  {
+    "id": 51,
+    "title": "Flutter & Dart Mobile App Development",
+    "description": "Build cross-platform iOS and Android apps with a single codebase.",
+    "category": "Mobile Development",
+    "price": 49.99
+  },
+  {
+    "id": 52,
+    "title": "React Native Mobile App Bootcamp",
+    "description": "Use React skills to build native mobile apps for iOS and Android.",
+    "category": "Mobile Development",
+    "price": 44.99
+  },
+  {
+    "id": 53,
+    "title": "iOS App Development with Swift & SwiftUI",
+    "description": "Build modern, fast iOS applications using Apple's latest SwiftUI framework.",
+    "category": "Mobile Development",
+    "price": 59.99
+  },
+  {
+    "id": 54,
+    "title": "Android App Development with Kotlin",
+    "description": "Master Android SDK, Jetpack Compose, and Kotlin coroutines.",
+    "category": "Mobile Development",
+    "price": 54.99
+  },
+  {
+    "id": 55,
+    "title": "Mobile UI/UX Design & Prototyping in Figma",
+    "description": "Design user-friendly interfaces and interactive prototypes for mobile apps.",
+    "category": "Mobile Development",
+    "price": 29.99
+  },
+  {
+    "id": 56,
+    "title": "PostgreSQL Architecture & Administration",
+    "description": "Master relational database management, indexing, tuning, and replication.",
+    "category": "Databases",
+    "price": 49.99
+  },
+  {
+    "id": 57,
+    "title": "MongoDB Developer & Administrator Guide",
+    "description": "NoSQL document database design, aggregation pipelines, and sharding.",
+    "category": "Databases",
+    "price": 39.99
+  },
+  {
+    "id": 58,
+    "title": "Redis In-Memory Database & Caching",
+    "description": "Speed up web applications with Redis caching, pub/sub, and data structures.",
+    "category": "Databases",
+    "price": 29.99
+  },
+  {
+    "id": 59,
+    "title": "Vector Databases for AI: Pinecone, Qdrant & Milvus",
+    "description": "Learn semantic vector search, ANN indexing, and hybrid search RAG apps.",
+    "category": "Databases",
+    "price": 69.99
+  },
+  {
+    "id": 60,
+    "title": "Neo4j Graph Database Fundamentals",
+    "description": "Build graph database models using Cypher query language.",
+    "category": "Databases",
+    "price": 44.99
+  },
+  {
+    "id": 61,
+    "title": "Data Structures & Algorithms in Python",
+    "description": "Ace technical coding interviews: trees, graphs, dynamic programming.",
+    "category": "Software Engineering",
+    "price": 39.99
+  },
+  {
+    "id": 62,
+    "title": "System Design & Distributed Systems",
+    "description": "Architect scalable systems: load balancers, microservices, and message queues.",
+    "category": "Software Engineering",
+    "price": 79.99
+  },
+  {
+    "id": 63,
+    "title": "Clean Code & Design Patterns in Java",
+    "description": "Object-oriented programming, SOLID principles, and Gang of Four patterns.",
+    "category": "Software Engineering",
+    "price": 44.99
+  },
+  {
+    "id": 64,
+    "title": "Git & GitHub Masterclass",
+    "description": "Master version control, branching strategies, rebase, and open-source collaboration.",
+    "category": "Software Engineering",
+    "price": 19.99
+  },
+  {
+    "id": 65,
+    "title": "Go (Golang) Programming Language Bootcamp",
+    "description": "Build concurrent, high-performance backends with Go.",
+    "category": "Software Engineering",
+    "price": 49.99
+  },
+  {
+    "id": 66,
+    "title": "Rust Programming for Systems Engineering",
+    "description": "Memory safety without garbage collection, concurrency, and WebAssembly.",
+    "category": "Software Engineering",
+    "price": 59.99
+  },
+  {
+    "id": 67,
+    "title": "Microservices Architecture with Spring Boot",
+    "description": "Build enterprise Java microservices with Spring Cloud and Eureka.",
+    "category": "Software Engineering",
+    "price": 64.99
+  },
+  {
+    "id": 68,
+    "title": "C++ Modern High-Performance Programming",
+    "description": "C++17/C++20 features, memory management, and low-latency systems.",
+    "category": "Software Engineering",
+    "price": 54.99
+  },
+  {
+    "id": 69,
+    "title": "Unit Testing & TDD in Python (PyTest)",
+    "description": "Test-driven development, mocking, coverage, and automated software testing.",
+    "category": "Software Engineering",
+    "price": 29.99
+  },
+  {
+    "id": 70,
+    "title": "Apache Kafka for Event-Driven Systems",
+    "description": "Stream processing, event sourcing, Kafka producers/consumers, and Connect.",
+    "category": "Software Engineering",
+    "price": 69.99
+  },
+  {
+    "id": 71,
+    "title": "UI/UX Design Specialization in Figma",
+    "description": "User research, wireframing, interactive prototyping, and design systems.",
+    "category": "Design",
+    "price": 39.99
+  },
+  {
+    "id": 72,
+    "title": "User Experience Research & Usability Testing",
+    "description": "Conduct user interviews, journey mapping, and usability evaluation.",
+    "category": "Design",
+    "price": 34.99
+  },
+  {
+    "id": 73,
+    "title": "3D Modeling & Animation with Blender",
+    "description": "Create 3D assets, textures, lighting, and animations from scratch.",
+    "category": "Design",
+    "price": 49.99
+  },
+  {
+    "id": 74,
+    "title": "Graphic Design Masterclass: Photoshop & Illustrator",
+    "description": "Branding, logo design, typography, and visual communication.",
+    "category": "Design",
+    "price": 29.99
+  },
+  {
+    "id": 75,
+    "title": "Motion Graphics with Adobe After Effects",
+    "description": "Animate titles, lower thirds, UI animations, and visual effects.",
+    "category": "Design",
+    "price": 44.99
+  },
+  {
+    "id": 76,
+    "title": "Product Management Fundamentals",
+    "description": "Product strategy, roadmap creation, agile sprints, and metrics (KPIs).",
+    "category": "Business & Management",
+    "price": 49.99
+  },
+  {
+    "id": 77,
+    "title": "Agile & Scrum Master Certification Prep",
+    "description": "Lead software teams using Scrum frameworks, Kanban, and user stories.",
+    "category": "Business & Management",
+    "price": 39.99
+  },
+  {
+    "id": 78,
+    "title": "Digital Marketing & SEO Mastery",
+    "description": "Search engine optimization, Google Ads, content strategy, and analytics.",
+    "category": "Business & Management",
+    "price": 29.99
+  },
+  {
+    "id": 79,
+    "title": "Financial Modeling & Valuation in Excel",
+    "description": "Build financial statements, DCF models, and investment analysis.",
+    "category": "Business & Management",
+    "price": 54.99
+  },
+  {
+    "id": 80,
+    "title": "Startup Founding & Venture Capital Basics",
+    "description": "Pitch deck creation, fundraising, cap tables, and startup growth hacking.",
+    "category": "Business & Management",
+    "price": 69.99
+  },
+  {
+    "id": 81,
+    "title": "MLOps: Machine Learning Operations in Production",
+    "description": "Automate ML lifecycle with MLflow, Kubeflow, and model monitoring.",
+    "category": "Artificial Intelligence",
+    "price": 89.99
+  },
+  {
+    "id": 82,
+    "title": "Prompt Engineering for Developers",
+    "description": "Learn chain-of-thought, few-shot prompting, and context optimization.",
+    "category": "Artificial Intelligence",
+    "price": 29.99
+  },
+  {
+    "id": 83,
+    "title": "Autonomous AI Agents with AutoGen",
+    "description": "Design conversational agents that collaborate to solve complex code tasks.",
+    "category": "Artificial Intelligence",
+    "price": 79.99
+  },
+  {
+    "id": 84,
+    "title": "Fine-Tuning Open Source LLMs (Llama 3 & Mistral)",
+    "description": "PEFT, LoRA, and QLoRA techniques for domain-specific language models.",
+    "category": "Artificial Intelligence",
+    "price": 94.99
+  },
+  {
+    "id": 85,
+    "title": "AI Ethics, Governance & Safety",
+    "description": "Understand bias, compliance, safety guardrails, and responsible AI deployment.",
+    "category": "Artificial Intelligence",
+    "price": 39.99
+  },
+  {
+    "id": 86,
+    "title": "Web3 & Ethereum Smart Contract Development",
+    "description": "Solidity programming, Hardhat, Web3.js, and decentralized applications (dApps).",
+    "category": "Blockchain",
+    "price": 59.99
+  },
+  {
+    "id": 87,
+    "title": "Rust for Solana Blockchain Development",
+    "description": "Build high-speed, low-cost decentralized programs on Solana.",
+    "category": "Blockchain",
+    "price": 69.99
+  },
+  {
+    "id": 88,
+    "title": "DeFi (Decentralized Finance) Engineering",
+    "description": "Automated Market Makers (AMM), liquidity pools, and yield farming contracts.",
+    "category": "Blockchain",
+    "price": 79.99
+  },
+  {
+    "id": 89,
+    "title": "Quantum Computing Fundamentals with Qiskit",
+    "description": "Learn quantum gates, algorithms, and IBM Qiskit framework.",
+    "category": "Emerging Tech",
+    "price": 84.99
+  },
+  {
+    "id": 90,
+    "title": "IoT System Architecture & Raspberry Pi",
+    "description": "Connect sensors, MQTT protocols, microcontrollers, and cloud IoT hubs.",
+    "category": "Emerging Tech",
+    "price": 44.99
+  },
+  {
+    "id": 91,
+    "title": "AR/VR Development with Unity & C#",
+    "description": "Create immersive augmented and virtual reality experiences for VR headsets.",
+    "category": "Emerging Tech",
+    "price": 64.99
+  },
+  {
+    "id": 92,
+    "title": "Unreal Engine 5 Game Development",
+    "description": "Build photorealistic 3D games with C++ and Blueprint visual scripting.",
+    "category": "Game Development",
+    "price": 59.99
+  },
+  {
+    "id": 93,
+    "title": "Unity 2D & 3D Complete Developer Course",
+    "description": "Master C# programming and game design principles in Unity.",
+    "category": "Game Development",
+    "price": 49.99
+  },
+  {
+    "id": 94,
+    "title": "Embedded Systems Programming in C",
+    "description": "Microcontrollers, ARM Cortex-M, registers, and bare-metal programming.",
+    "category": "Software Engineering",
+    "price": 54.99
+  },
+  {
+    "id": 95,
+    "title": "Linux Kernel Module Development",
+    "description": "Write custom Linux device drivers and understand OS kernel architecture.",
+    "category": "Software Engineering",
+    "price": 74.99
+  },
+  {
+    "id": 96,
+    "title": "Snowflake Cloud Data Warehouse Guide",
+    "description": "Data loading, virtual warehouses, zero-copy cloning, and SQL analytics.",
+    "category": "Data Science",
+    "price": 59.99
+  },
+  {
+    "id": 97,
+    "title": "dbt (Data Build Tool) for Analytics Engineering",
+    "description": "Transform data inside your warehouse with SQL and Jinja templates.",
+    "category": "Data Science",
+    "price": 49.99
+  },
+  {
+    "id": 98,
+    "title": "Playwright & Selenium Automation Testing",
+    "description": "End-to-end browser automation testing with Python and Node.js.",
+    "category": "Software Engineering",
+    "price": 39.99
+  },
+  {
+    "id": 99,
+    "title": "GraphQL API Security & Hardening",
+    "description": "Protect GraphQL endpoints against query depth attacks and rate limits.",
+    "category": "Cyber Security",
+    "price": 44.99
+  },
+  {
+    "id": 100,
+    "title": "Agentic AI Frameworks Masterclass",
+    "description": "Build, evaluate, and deploy enterprise-grade autonomous AI Agents.",
+    "category": "Artificial Intelligence",
+    "price": 99.99
+  }
+]
