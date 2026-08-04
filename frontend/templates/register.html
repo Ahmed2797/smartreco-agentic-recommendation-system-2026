@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartReco AI - Register</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .form-control {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            border-radius: 30px;
+        }
+
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            border-color: #00f2fe;
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.5);
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="glass-card p-4">
+        <div class="text-center mb-4">
+            <a href="/dashboard" class="text-decoration-none">
+                <i class="fa-solid fa-brain text-info fs-1 mb-2"></i>
+                <h3 class="fw-bold text-white m-0">SmartReco <span class="text-info">AI</span></h3>
+            </a>
+            <p class="text-white-50 mt-1 small">Create an account to get AI recommendations</p>
+        </div>
+
+        {% if error %}
+        <div class="alert alert-danger p-2 text-center small rounded-pill mb-3" role="alert">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <form action="/auth/register" method="POST">
+            <div class="mb-3">
+                <label class="form-label text-white-50 small">Full Name</label>
+                <div class="input-group">
+                    <input type="text" name="full_name" class="form-control px-3 py-2" placeholder="John Doe" required>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label text-white-50 small">Email Address</label>
+                <input type="email" name="email" class="form-control px-3 py-2" placeholder="name@example.com" required>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label text-white-50 small">Password</label>
+                <input type="password" name="password" class="form-control px-3 py-2" placeholder="••••••••" required>
+            </div>
+
+            <button type="submit" class="btn btn-info w-100 rounded-pill fw-bold py-2 mb-3">
+                <i class="fa-solid fa-user-plus me-1"></i> Register Account
+            </button>
+        </form>
+
+        <div class="text-center pt-2 border-top border-secondary">
+            <small class="text-white-50">Already have an account? 
+                <a href="/auth/login" class="text-info text-decoration-none fw-bold">Login here</a>
+            </small>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>
