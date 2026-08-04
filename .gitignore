@@ -1,3 +1,10 @@
+push
+.env
+__pycache__/
+*.db
+Data/*.db
+.venv/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
