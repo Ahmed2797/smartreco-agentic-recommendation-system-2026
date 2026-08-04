@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartReco AI</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism Styling */
+        .glass-card {
+            background: rgba(32, 180, 180, 0.08);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 255, 255, 0.4);
+            box-shadow: 0 12px 40px 0 rgba(143, 229, 229, 0.2);
+        }
+
+        .glass-nav {
+            background: rgba(26, 59, 73, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* AI Badge Accent */
+        .ai-badge {
+            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            color: #000;
+            font-weight: 700;
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 0.8rem;
+        }
+
+        .product-img {
+            height: 400px;
+            object-fit: cover;
+            border-radius: 12px 12px 0 0;
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .search-box {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            border-radius: 30px;
+        }
+
+        .search-box:focus {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            border-color: #00f2fe;
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.5);
+        }
+
+        .search-box::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .badge-category {
+            background: rgba(255, 255, 255, 0.15);
+            color: #00f2fe;
+            border: 1px solid rgba(0, 242, 254, 0.3);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Fixed & Cleaned Navbar -->
+    <nav class="navbar navbar-expand-lg glass-nav p-3 sticky-top">
+        <div class="container">
+            <a class="navbar-brand text-white fw-bold d-flex align-items-center gap-2" href="/dashboard">
+                <i class="fa-solid fa-brain text-info fs-3"></i>
+                <span>SmartReco <span class="text-info">AI</span></span>
+            </a>
+
+            <div class="d-flex align-items-center gap-3">
+                <a href="/admin" class="btn btn-outline-info rounded-pill px-3 py-1 btn-sm">
+                    <i class="fa-solid fa-chart-line me-1"></i> Admin Panel
+                </a>
+
+                <div class="text-end d-none d-md-block">
+                    <small class="text-white-50 d-block">Welcome back,</small>
+                    <span class="fw-bold text-info">
+                        {{ user.full_name if user and user.full_name else (user.username if user and user.username else 'Guest') }}
+                    </span>
+                </div>
+                
+                {% if user %}
+                    <a href="/auth/logout" class="btn btn-outline-danger rounded-pill px-3 py-1 btn-sm">
+                        <i class="fa-solid fa-right-from-bracket me-1"></i> Logout
+                    </a>
+                {% else %}
+                    <a href="/auth/login" class="btn btn-info rounded-pill px-3 py-1 btn-sm fw-bold">
+                        <i class="fa-solid fa-right-to-bracket me-1"></i> Login
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4 pb-5">
+
+        <!-- Search Bar -->
+        <div class="row justify-content-center mb-5">
+            <div class="col-md-8 col-lg-6">
+                <form action="/dashboard" method="GET" class="d-flex gap-2">
+                    <input type="text" name="search" class="form-control search-box px-4 py-2" 
+                           placeholder="Search gadgets, electronics, accessories..." 
+                           value="{{ search_query if search_query is defined else '' }}">
+                    <button type="submit" class="btn btn-info rounded-circle px-3">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Section 1: AI Personalized Recommendations -->
+        <div class="mb-5">
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <h3 class="m-0 d-flex align-items-center gap-2">
+                    <i class="fa-solid fa-wand-magic-sparkles text-info"></i>
+                    Recommended For You
+                </h3>
+                <span class="ai-badge"><i class="fa-solid fa-brain me-1"></i> LangGraph Agent Active</span>
+            </div>
+
+            <!-- AI Generated Persuasive Narrative Banner -->
+            {% if narrative %}
+            <div class="glass-card p-3 mb-4 border-info d-flex align-items-center gap-3">
+                <i class="fa-solid fa-robot text-info fs-2"></i>
+                <div>
+                    <small class="fw-bold text-info text-uppercase">AI Recommendation Insights</small>
+                    <p class="m-0 text-white-50 fst-italic">"{{ narrative }}"</p>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="row g-4">
+                {% if recommended_products %}
+                    {% for product in recommended_products %}
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <div class="glass-card h-100 d-flex flex-column" data-product-id="{{ product.id }}">
+                            <!-- <img src="{{ product.image_url if product.image_url else 'https://via.placeholder.com/300x200?text=AI+Product' }}"  -->
+                                 <!-- class="card-img-top product-img" alt="{{ product.title }}"> -->
+                            
+                            <div class="card-body p-3 d-flex flex-column justify-content-between flex-grow-1">
+                                <div>
+                                    <span class="badge badge-category mb-2">{{ product.category }}</span>
+                                    <h6 class="card-title text-truncate fw-bold">{{ product.title }}</h6>
+                                </div>
+                                <div class="mt-3">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span class="fw-bold text-info fs-5">${{ "%.2f"|format(product.price) }}</span>
+                                    </div>
+                                    <button class="btn btn-sm btn-info w-100 rounded-pill fw-bold btn-add-cart" 
+                                            data-product-id="{{ product.id }}">
+                                        <i class="fa-solid fa-cart-plus me-1"></i> Add to Cart
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="col-12">
+                        <div class="glass-card text-center p-4">
+                            <p class="text-white-50 m-0">No recommendations available yet. Browse products to build your profile!</p>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Section 2: Full Product Catalog -->
+        <div class="mb-5">
+            <h4 class="mb-4 d-flex align-items-center gap-2 text-white-50">
+                <i class="fa-solid fa-store"></i> Product Catalog
+            </h4>
+
+            <div class="row g-4">
+                {% if products %}
+                    {% for product in products %}
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <div class="glass-card h-100 d-flex flex-column" data-product-id="{{ product.id }}">
+                            <!-- <img src="{{ product.image_url if product.image_url else 'https://via.placeholder.com/300x200?text=Product' }}" 
+                                 class="card-img-top product-img" alt="{{ product.title }}"> -->
+                            
+                            <div class="card-body p-3 d-flex flex-column justify-content-between flex-grow-1">
+                                <div>
+                                    <span class="badge badge-category mb-2">{{ product.category }}</span>
+                                    <h6 class="card-title text-truncate fw-bold">{{ product.title }}</h6>
+                                </div>
+                                <div class="mt-3">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span class="fw-bold text-info fs-5">${{ "%.2f"|format(product.price) }}</span>
+                                    </div>
+                                    <button class="btn btn-sm btn-outline-info w-100 rounded-pill fw-bold btn-add-cart" 
+                                            data-product-id="{{ product.id }}">
+                                        <i class="fa-solid fa-cart-plus me-1"></i> Add to Cart
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="col-12">
+                        <div class="glass-card text-center p-5">
+                            <i class="fa-solid fa-box-open fs-1 text-white-50 mb-3"></i>
+                            <h5>No Products Found</h5>
+                            <p class="text-white-50">Try searching with a different keyword or run the seed script.</p>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Behavioral Tracker Script -->
+    <script src="/static/js/tracker.js"></script>
+
+    <script>
+        // Custom trigger for 'add_to_cart' tracking event
+        document.addEventListener('click', function (e) {
+            const cartBtn = e.target.closest('.btn-add-cart');
+            if (cartBtn) {
+                const productId = cartBtn.getAttribute('data-product-id');
+                
+                // Visual feedback for user
+                cartBtn.classList.remove('btn-outline-info', 'btn-info');
+                cartBtn.classList.add('btn-success');
+                cartBtn.innerHTML = '<i class="fa-solid fa-check me-1"></i> Added!';
+
+                setTimeout(() => {
+                    cartBtn.classList.remove('btn-success');
+                    cartBtn.classList.add('btn-outline-info');
+                    cartBtn.innerHTML = '<i class="fa-solid fa-cart-plus me-1"></i> Add to Cart';
+                }, 1500);
+
+                // Send beacon or fetch event if tracker function is available
+                if (typeof window.sendEvent === 'function') {
+                    window.sendEvent('add_to_cart', 'User added product to cart', productId);
+                }
+            }
+        });
+    </script>
+
+</body>
+
+</html>
