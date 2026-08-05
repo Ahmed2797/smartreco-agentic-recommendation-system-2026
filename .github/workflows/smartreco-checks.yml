@@ -1,4 +1,4 @@
-name: SmartReco Checks
+name: SmartReco-Checks
 
 on: [push]
 
