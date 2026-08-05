@@ -14,8 +14,8 @@
     <style>
         body {
             min-height: 100vh;
-            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-            color: #ffffff;
+            background: linear-gradient(135deg, #1e3f4e, #203a43, #2c5364);
+            color: #e0c5c5;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow-x: hidden;
         }
@@ -27,7 +27,7 @@
             -webkit-backdrop-filter: blur(16px);
             border-radius: 16px;
             border: 1px solid rgba(255, 255, 255, 0.12);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            box-shadow: 0 8px 32px 0 rgba(212, 207, 207, 0.37);
             transition: all 0.3s ease-in-out;
         }
 
@@ -61,8 +61,8 @@
         }
 
         .search-box {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(221, 204, 204, 0.1);
+            border: 1px solid rgba(237, 230, 230, 0.2);
             color: #fff;
             border-radius: 30px;
         }
@@ -163,8 +163,8 @@
                     {% for product in recommended_products %}
                     <div class="col-6 col-md-4 col-lg-3">
                         <div class="glass-card h-100 d-flex flex-column" data-product-id="{{ product.id }}">
-                            <!-- <img src="{{ product.image_url if product.image_url else 'https://via.placeholder.com/300x200?text=AI+Product' }}"  -->
-                                 <!-- class="card-img-top product-img" alt="{{ product.title }}"> -->
+                            <img src="{{ product.image_url if product.image_url else 'https://via.placeholder.com/300x200?text=AI+Product' }}"
+                                class="card-img-top product-img" alt="{{ product.title }}">
                             
                             <div class="card-body p-3 d-flex flex-column justify-content-between flex-grow-1">
                                 <div>
@@ -205,8 +205,8 @@
                     {% for product in products %}
                     <div class="col-6 col-md-4 col-lg-3">
                         <div class="glass-card h-100 d-flex flex-column" data-product-id="{{ product.id }}">
-                            <!-- <img src="{{ product.image_url if product.image_url else 'https://via.placeholder.com/300x200?text=Product' }}" 
-                                 class="card-img-top product-img" alt="{{ product.title }}"> -->
+                            <img src="{{ product.image_url if product.image_url else 'https://via.placeholder.com/300x200?text=Product' }}" 
+                                 class="card-img-top product-img" alt="{{ product.title }}">
                             
                             <div class="card-body p-3 d-flex flex-column justify-content-between flex-grow-1">
                                 <div>
