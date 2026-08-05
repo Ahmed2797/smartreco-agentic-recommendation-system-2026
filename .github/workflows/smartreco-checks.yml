@@ -13,8 +13,8 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  # Where the API actually lives. This is the only value that changes between environments.
-  API_BASE: https://careerapi-staging.krishnaik.in
+  # Where the API actually lives (Live Production Server)
+  API_BASE: https://careerapi.krishnaik.in
   # Opaque identifier stamped into the OIDC token. NOT a URL that gets fetched, and NOT
   # environment-specific — the server accepts this exact string everywhere. Do not change it.
   OIDC_AUDIENCE: https://career.krishnaik.in
@@ -24,9 +24,11 @@ jobs:
   checks:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
