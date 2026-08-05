@@ -73,7 +73,7 @@ def retrieve_products_node(state: RecommendationAgentState) -> Dict[str, Any]:
     
     # 1. Vector Search using text embeddings
     query_vector = get_text_embedding(summary)
-    matches = search_similar_products(query_vector=query_vector, top_k=5)
+    matches = search_similar_products(query_vector=query_vector, top_k=7)
     
     return {"retrieved_matches": matches or []}
 
@@ -83,11 +83,11 @@ def evaluate_and_refine_node(state: RecommendationAgentState) -> Dict[str, Any]:
     matches = state.get("retrieved_matches", [])
     
     # 1. Filter products with score threshold
-    refined_matches = [m for m in matches if m.get("score", 0.0) >= 0.5]
+    refined_matches = [m for m in matches if m.get("score", 0.0) >= 0.3]
     
     # 2. FALLBACK: If similarity threshold was too strict, grab the top 3 matches anyway
     if not refined_matches and matches:
-        refined_matches = matches[:3]
+        refined_matches = matches[:5]
 
     # 3. Ensure product IDs are converted cleanly to standard integers
     refined_ids = []
