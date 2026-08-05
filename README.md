@@ -4,6 +4,8 @@
 
 - A state-of-the-art, hybrid recommendation platform powered by **FastAPI**, **LangGraph / OpenAI**, **Pinecone Vector DB**, and **SQLAlchemy**. SmartReco bridges traditional behavioral analytics with cutting-edge agentic explicit reasoning to deliver hyper-personalized product recommendations, real-time analytics, and dynamic AI match scores.
 
+![AI](frontend/static/images/image.png)
+
 ---
 
 ## 🌟 Highlights & Key Features
