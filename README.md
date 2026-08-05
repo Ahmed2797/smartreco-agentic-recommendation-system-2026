@@ -67,8 +67,8 @@ SmartReco utilizes a **3-Tier Hybrid Recommendation Strategy** to balance accura
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/smartreco-agentic-recommendation-system.git
-cd smartreco-agentic-recommendation-system
+git clone https://github.com/Ahmed2797/smartreco-agentic-recommendation-system-2026.git
+cd smartreco-agentic-recommendation-system-2026
 ```
 
 ### 2. Create and Activate Virtual Environment
