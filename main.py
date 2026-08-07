@@ -12,7 +12,7 @@ from src.database.db import get_db
 from src.database import models
 
 # Router Imports
-from src.routes import auth, admin, dashboard, products, recommendations, tracking
+from src.routes import auth, admin,events, dashboard, products, recommendations, tracking
 
 # LangGraph AI Agent Import (Ensure this matches your file location)
 from src.agent.langgraph_agent import run_agentic_recommendation
@@ -29,6 +29,8 @@ templates = Jinja2Templates(directory="frontend/templates")
 # Include Authentication Router
 app.include_router(auth.router)
 app.include_router(admin.router)
+app.include_router(events.router)
+app.include_router(recommendations.router)
 
 # app.include_router(dashboard.router)
 
@@ -45,21 +47,6 @@ class TrackEventSchema(BaseModel):
     product_id: Optional[int] = None
     timestamp: Optional[str] = None
 
-
-# @app.post("/api/track", status_code=status.HTTP_200_OK)
-# async def track_user_event(event: TrackEventSchema, db: Session = Depends(get_db)):
-#     """
-#     Receives behavioral events from tracker.js (e.g. search, product views, page loads)
-#     and logs them so the AI Recommendation Agent can learn from user behavior.
-#     """
-#     print(f"--> [Tracker Event] Type: {event.event_type} | Desc: {event.description} | Product ID: {event.product_id}")
-    
-#     # Optional: Save event to database if you have an Event/Activity model
-#     # new_event = models.UserActivity(event_type=event.event_type, description=event.description)
-#     # db.add(new_event)
-#     # db.commit()
-
-#     return {"status": "success", "message": "Event logged successfully"}
 
 @app.post("/api/track", status_code=status.HTTP_200_OK)
 async def track_user_event(
