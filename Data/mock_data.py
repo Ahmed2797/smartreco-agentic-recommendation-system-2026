@@ -17,6 +17,30 @@ from src.embeddings.embedding import get_text_embedding
 from src.embeddings.vector_store import upsert_product_to_vector_db
 
 
+
+def get_user_events_from_db(user_id: int, db: Session, limit: int = 10) -> list[dict]:
+    """
+    Fetches recent activity history for a given user from SQLite/PostgreSQL DB.
+    """
+    activities = (
+        db.query(models.UserActivity)
+        .filter(models.UserActivity.user_id == user_id)
+        .order_by(models.UserActivity.created_at.desc())
+        .limit(limit)
+        .all()
+    )
+
+    # Transform database models into dictionary list matching MOCK structure
+    return [
+        {
+            "user_id": act.user_id,
+            "event_type": act.event_type,
+            "event_data": act.event_data,
+            "product_id": act.product_id
+        }
+        for act in activities
+    ]
+
 # ================================
 # Demo User Events
 # ================================
@@ -95,7 +119,6 @@ def seed_database_and_pinecone():
         for p_data in products:
             existing_product = db.query(models.Product).filter_by(id=p_data["id"]).first()
 
-            # কেবল নতুন প্রোডাক্ট হলে SQL ও Vector DB-তে যোগ করবে
             if not existing_product:
                 product = models.Product(
                     id=p_data["id"],
