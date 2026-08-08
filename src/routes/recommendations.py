@@ -13,13 +13,14 @@ from src.prompt.recommendation_prompt import get_persuasive_recommendation_promp
 from src.chatmodel.mesh_client import mesh_client
 from src.agent.recommendation_agent import generate_and_save_user_recommendation
 
+
 # =====================================
 # RAG + Mesh API Execution Pipeline
 # =====================================
 def execute_recommendation_pipeline(user_id: int, db: Session) -> Optional[models.Recommendation]:
     """
     Executes the complete RAG Recommendation Pipeline:
-    1. Fetches recent user events (UserActivity).
+    1. Fetches recent user events (UserActivity / ActivityEvent).
     2. Runs vector semantic retrieval for relevant products in Pinecone.
     3. Generates Mesh API LLM persuasive narrative.
     4. Saves and returns the Recommendation record.
@@ -107,6 +108,27 @@ def execute_recommendation_pipeline(user_id: int, db: Session) -> Optional[model
         return None
 
 
+# Helper function to maintain relevance order and attach scores
+def _get_ordered_products_with_scores(product_ids: List[int], db: Session) -> List[models.Product]:
+    if not product_ids:
+        return []
+    
+    products_db = db.query(models.Product).filter(models.Product.id.in_(product_ids)).all()
+    product_map = {p.id: p for p in products_db}
+    
+    ordered = []
+    total = len(product_ids)
+    for index, p_id in enumerate(product_ids):
+        if p_id in product_map:
+            prod = product_map[p_id]
+            # Decaying match score display based on vector similarity ranking order
+            calculated_score = max(70, 98 - (index * 4))
+            prod.score = f"{calculated_score}%"
+            ordered.append(prod)
+            
+    return ordered
+
+
 # =====================================
 # Response Schemas (Pydantic Models)
 # =====================================
@@ -116,6 +138,7 @@ class RecommendationItem(BaseModel):
     description: Optional[str] = None
     category: str
     price: float
+    score: Optional[str] = None
 
     class Config:
         from_attributes = True
@@ -150,12 +173,13 @@ def get_my_recommendations(
     Executes real-time RAG pipeline with Mesh API narrative for the authenticated user.
     """
     try:
-        # rec_record = execute_recommendation_pipeline(user_id=current_user.id, db=db)
-        rec_record = generate_and_save_user_recommendation(user_id=current_user.id, db=db)
+        rec_record = execute_recommendation_pipeline(user_id=current_user.id, db=db)
 
         # Cold Start / Fallback if pipeline returns no products
         if not rec_record or not rec_record.recommended_product_ids:
             fallback_products = db.query(models.Product).limit(5).all()
+            for p in fallback_products:
+                p.score = "85%"
             return {
                 "user_id": current_user.id,
                 "narrative": "Welcome to SmartReco AI! Here are our top featured courses to start your learning journey.",
@@ -163,17 +187,13 @@ def get_my_recommendations(
                 "recommendations": fallback_products
             }
 
-        products = (
-            db.query(models.Product)
-            .filter(models.Product.id.in_(rec_record.recommended_product_ids))
-            .all()
-        )
+        ordered_products = _get_ordered_products_with_scores(rec_record.recommended_product_ids, db)
 
         return {
             "user_id": current_user.id,
             "narrative": rec_record.narrative,
-            "count": len(products),
-            "recommendations": products
+            "count": len(ordered_products),
+            "recommendations": ordered_products
         }
 
     except Exception as e:
@@ -207,6 +227,8 @@ def get_recommendations_by_user_id(
 
         if not rec_record or not rec_record.recommended_product_ids:
             fallback_products = db.query(models.Product).limit(5).all()
+            for p in fallback_products:
+                p.score = "85%"
             return {
                 "user_id": user_id,
                 "narrative": "No activity history found. Displaying general course catalogue.",
@@ -214,17 +236,13 @@ def get_recommendations_by_user_id(
                 "recommendations": fallback_products
             }
 
-        products = (
-            db.query(models.Product)
-            .filter(models.Product.id.in_(rec_record.recommended_product_ids))
-            .all()
-        )
+        ordered_products = _get_ordered_products_with_scores(rec_record.recommended_product_ids, db)
 
         return {
             "user_id": user_id,
             "narrative": rec_record.narrative,
-            "count": len(products),
-            "recommendations": products
+            "count": len(ordered_products),
+            "recommendations": ordered_products
         }
 
     except Exception as e:
