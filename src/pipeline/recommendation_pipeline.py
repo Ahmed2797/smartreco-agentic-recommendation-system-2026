@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from src.database import models, crud
 from src.pipeline.retrieval_pipeline import retrieve_relevant_products_pipeline
 from src.prompt.recommendation_prompt import get_persuasive_recommendation_prompt
-# from src.chatmodel.mesh_client import mesh_client
+from src.chatmodel.mesh_client import mesh_client
 from src.chatmodel.llm import test_openai_api
 
 
@@ -45,7 +45,6 @@ def execute_recommendation_pipeline(user_id: int, db: Session) -> Optional[model
     products_db = db.query(models.Product).filter(models.Product.id.in_(matched_ids)).all()
     product_map = {p.id: p for p in products_db}
     
-    # Vector Ranking বজায় রেখে টাইটেল বের করা
     ordered_products = [product_map[p_id] for p_id in matched_ids if p_id in product_map]
     product_titles = [p.title for p in ordered_products]
 
@@ -54,23 +53,23 @@ def execute_recommendation_pipeline(user_id: int, db: Session) -> Optional[model
 
     # 4. LLM Execution via Mesh API (With Exception Handling)
     try:
-        # response = mesh_client.chat.completions.create(
-        #     model="openai/gpt-4o-mini",
-        #     messages=[
-        #         {
-        #             "role": "system",
-        #             "content": "You are an expert AI product recommender assistant."
-        #         },
-        #         {
-        #             "role": "user",
-        #             "content": prompt
-        #         }
-        #     ],
-        #     temperature=0.7
-        # )
-        # narrative = response.choices[0].message.content.strip()
+        response = mesh_client.chat.completions.create(
+            model="openai/gpt-4o-mini",
+            messages=[
+                {
+                    "role": "system",
+                    "content": "You are an expert AI product recommender assistant."
+                },
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ],
+            temperature=0.7
+        )
+        narrative = response.choices[0].message.content.strip()
 
-        narrative = test_openai_api(prompt)
+        # narrative = test_openai_api(prompt)
 
     except Exception as e:
         print(f"❌ Mesh LLM API Error: {e}")
