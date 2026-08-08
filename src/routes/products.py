@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from src.database.db import get_db
 from src.database import models
-from src.pipeline.recommendation_pipeline import execute_recommendation_pipeline
+from src.routes.recommendations import execute_recommendation_pipeline, get_my_recommendations
 
 router = APIRouter(tags=["Products & Recommendations"])
 templates = Jinja2Templates(directory="frontend/templates")
@@ -54,7 +54,8 @@ def render_recommendations(request: Request, db: Session = Depends(get_db)):
 @router.get("/products/recommendations/{user_id}")
 def get_user_recommendations(user_id: int, db: Session = Depends(get_db)):
     """Fetch recommendations for a specific user based on their activity events."""
-    rec = execute_recommendation_pipeline(user_id, db)
+    # rec = execute_recommendation_pipeline(user_id, db)
+    rec = get_my_recommendations(user_id, db)
     
     if not rec:
         raise HTTPException(status_code=404, detail="No activity found to generate recommendations")
