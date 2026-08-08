@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session, joinedload
 from src.database import models
 from src.chatmodel.llm import test_openai_api
+from src.chatmodel.mesh_client import test_mesh_api
 
 from src.embeddings.embedding import get_text_embedding
 from src.embeddings.vector_store import search_similar_products
@@ -91,7 +92,7 @@ def generate_and_save_user_recommendation(user_id: int, db: Session):
     
     Write a 2-sentence persuasive reason why these products fit their intent.
     """
-    narrative = test_openai_api(prompt)
+    narrative = test_mesh_api(prompt)
 
     return {
         "user_id": user_id,
