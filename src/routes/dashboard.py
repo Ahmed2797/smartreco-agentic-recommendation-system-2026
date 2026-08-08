@@ -7,7 +7,7 @@ from src.database.db import get_db
 from src.database import models
 from src.agent.recommendation_agent import generate_and_save_user_recommendation
 
-from src.services.recommendation_service import RecommendationEngine
+from src.routes.engine import RecommendationEngine
 from src.routes.auth import get_current_user
 
 router = APIRouter(prefix="/dashboard", tags=["User Dashboard"])
@@ -61,7 +61,7 @@ def get_user_dashboard(
 def dashboard(request: Request, db: Session = Depends(get_db), current_user = Depends(get_current_user)):
     
     # 1. Fast, zero-cost behavioral recommendations
-    engine = RecommendationEngine(db)
+    engine = RecommendationEngine(db=db)
     recommended_products = engine.generate_recommendations(user_id=current_user.id, limit=4)
     
     # 2. Attach calculated scores for your frontend UI badges
