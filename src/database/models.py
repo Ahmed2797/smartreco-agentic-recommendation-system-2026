@@ -61,6 +61,7 @@ class UserActivity(Base):
 
     # Relationships
     user = relationship("User", back_populates="activities")
+    product = relationship("Product")
     def __repr__(self):
         return f"<UserActivity(id={self.id}, user_id={self.user_id}, event_type='{self.event_type}')>"
 

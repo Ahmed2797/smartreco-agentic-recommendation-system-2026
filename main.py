@@ -16,6 +16,9 @@ from src.routes import auth, admin,events, dashboard, products, recommendations,
 
 # LangGraph AI Agent Import (Ensure this matches your file location)
 from src.agent.langgraph_agent import run_agentic_recommendation
+from src.utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 app = FastAPI(title="SmartReco AI")
 
@@ -31,6 +34,8 @@ app.include_router(auth.router)
 app.include_router(admin.router)
 app.include_router(events.router)
 app.include_router(recommendations.router)
+app.include_router(tracking.router)
+
 
 # app.include_router(dashboard.router)
 
@@ -64,8 +69,14 @@ async def track_user_event(
             event_data= event.event_data or event.description,
             product_id=event.product_id
         )
-        db.add(new_event)
-        db.commit()
+        try:
+            db.add(new_event)
+            db.commit()
+        except Exception:
+            db.rollback()
+            logger.exception("Failed to store /api/track event")
+            return {"status": "error", "message": "Could not log event"}
+        logger.info("Tracked event type=%s user_id=%s", event.event_type, user_id)
         return {"status": "success", "message": f"Logged event for user {user_id}"}
 
     return {"status": "ignored", "message": "No authenticated user"}
@@ -84,8 +95,15 @@ async def get_dashboard(
         # Redirect to login if user isn't authenticated
         return RedirectResponse(url="/auth/login")
 
-    user_id = int(user_id)
+    try:
+        user_id = int(user_id)
+    except ValueError:
+        logger.warning("Rejected dashboard request with malformed user cookie")
+        return RedirectResponse(url="/auth/login")
     current_user = db.query(models.User).filter(models.User.id == user_id).first()
+    if current_user is None:
+        logger.warning("Dashboard requested for missing user_id=%s", user_id)
+        return RedirectResponse(url="/auth/login")
 
     raw_events = db.query(models.UserActivity)\
     .filter(
@@ -116,6 +134,7 @@ async def get_dashboard(
         models.Product.id.in_(rec_ids)
     ).all() if rec_ids else []
 
+    logger.info("Rendering dashboard for user_id=%s recommendations=%s", user_id, len(recommended_products))
     return templates.TemplateResponse("dashboard.html", {
         "request": request,
         "user": current_user,
