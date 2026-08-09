@@ -1,11 +1,18 @@
-from meshapi import MeshAPI
 from meshapi import MeshAPI, ChatCompletionParams, ChatMessage
 from src.config.settings import settings
+from src.utils.logger import get_logger
 
-if not settings.MESH_API_KEY:
-        raise ValueError("MESH_API_KEY is not set in environment variables.")
+logger = get_logger(__name__)
+mesh_client = (
+    MeshAPI(base_url="https://api.meshapi.ai", token=settings.MESH_API_KEY)
+    if settings.MESH_API_KEY else None
+)
 
-mesh_client = MeshAPI(base_url="https://api.meshapi.ai", token=settings.MESH_API_KEY)
+
+def get_mesh_client() -> MeshAPI:
+    if mesh_client is None:
+        raise RuntimeError("MESH_API_KEY is required for Mesh recommendations")
+    return mesh_client
 
 
 def test_mesh_api(prompt: str):
@@ -14,7 +21,8 @@ def test_mesh_api(prompt: str):
     Ensure that the MESH_API_KEY is set in the environment variables.
     """
     
-    reply = mesh_client.chat.completions.create(
+    logger.info("Requesting recommendation narrative from Mesh")
+    reply = get_mesh_client().chat.completions.create(
         ChatCompletionParams(
             model="openai/gpt-4o-mini",
             messages=[
@@ -25,7 +33,8 @@ def test_mesh_api(prompt: str):
         )
     )
     
-    print("Mesh API Test Reply:", reply.choices[0].message.content)
-
-    return reply.choices[0].message.content.strip()
-
+    content = reply.choices[0].message.content
+    if not content:
+        raise RuntimeError("Mesh returned an empty recommendation narrative")
+    logger.info("Mesh recommendation narrative received")
+    return content.strip()
