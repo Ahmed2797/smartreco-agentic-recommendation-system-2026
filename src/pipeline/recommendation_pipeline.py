@@ -1,13 +1,13 @@
-import sys
-import os
 from typing import Optional
 from sqlalchemy.orm import Session
 
-from src.database import models, crud
+from src.database import models
 from src.pipeline.retrieval_pipeline import retrieve_relevant_products_pipeline
 from src.prompt.recommendation_prompt import get_persuasive_recommendation_prompt
-from src.chatmodel.mesh_client import mesh_client
 from src.chatmodel.llm import test_openai_api
+from src.utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 
 def execute_recommendation_pipeline(user_id: int, db: Session) -> Optional[models.Recommendation]:
@@ -20,15 +20,15 @@ def execute_recommendation_pipeline(user_id: int, db: Session) -> Optional[model
     """
     # 1. Fetch recent activity events directly from DB (Optimized query limit)
     events = (
-        db.query(models.ActivityEvent)
-        .filter(models.ActivityEvent.user_id == user_id)
-        .order_by(models.ActivityEvent.created_at.desc())
+        db.query(models.UserActivity)
+        .filter(models.UserActivity.user_id == user_id)
+        .order_by(models.UserActivity.created_at.desc())
         .limit(8)
         .all()
     )
 
     if not events:
-        print(f"⚠️ No activity events found for User {user_id}.")
+        logger.info("No activity events found for user_id=%s", user_id)
         return None
 
     # Reverse events to keep chronological order (Oldest to Newest of the last 8)
@@ -38,7 +38,7 @@ def execute_recommendation_pipeline(user_id: int, db: Session) -> Optional[model
     # 2. Semantic Retrieval via Vector Pipeline
     matched_ids = retrieve_relevant_products_pipeline(actions_summary)
     if not matched_ids:
-        print(f"⚠️ No matching products returned from vector pipeline for User {user_id}.")
+        logger.info("No matching products returned for user_id=%s", user_id)
         return None
 
     # Fetch products and preserve vector relevance ordering
@@ -53,44 +53,31 @@ def execute_recommendation_pipeline(user_id: int, db: Session) -> Optional[model
 
     # 4. LLM Execution via Mesh API (With Exception Handling)
     try:
-        response = mesh_client.chat.completions.create(
-            model="openai/gpt-4o-mini",
-            messages=[
-                {
-                    "role": "system",
-                    "content": "You are an expert AI product recommender assistant."
-                },
-                {
-                    "role": "user",
-                    "content": prompt
-                }
-            ],
-            temperature=0.7
-        )
-        narrative = response.choices[0].message.content.strip()
+        narrative = test_openai_api(prompt)
 
-        # narrative = test_openai_api(prompt)
-
-    except Exception as e:
-        print(f"❌ Mesh LLM API Error: {e}")
+    except Exception:
+        logger.exception("Narrative generation failed for user_id=%s", user_id)
         # Fallback narrative in case LLM fails
         narrative = f"Based on your interest in {actions_summary[:50]}..., we highly recommend these top courses."
 
     # 5. Save result in Recommendation DB using CRUD / Session
     try:
-        rec = models.Recommendation(
-            user_id=user_id,
-            narrative=narrative,
-            recommended_product_ids=matched_ids
-        )
-        db.add(rec)
+        # The Recommendation schema stores one product per row, not a narrative/list.
+        db.query(models.Recommendation).filter(models.Recommendation.user_id == user_id).delete()
+        rec = None
+        for rank, product_id in enumerate(matched_ids):
+            rec = models.Recommendation(
+                user_id=user_id, product_id=product_id,
+                score=max(0.5, 1.0 - (rank * 0.1)), algorithm_used="rag_v1",
+            )
+            db.add(rec)
         db.commit()
-        db.refresh(rec)
-        
-        print(f"✅ Recommendation pipeline completed & saved for User {user_id}")
+        if rec is not None:
+            db.refresh(rec)
+        logger.info("Saved %s recommendations for user_id=%s", len(matched_ids), user_id)
         return rec
 
-    except Exception as e:
+    except Exception:
         db.rollback()
-        print(f"❌ Failed to save recommendation to Database: {e}")
+        logger.exception("Failed to save recommendations for user_id=%s", user_id)
         return None
