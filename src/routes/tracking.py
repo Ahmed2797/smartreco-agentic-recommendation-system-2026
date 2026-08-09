@@ -7,6 +7,9 @@ import json
 
 from src.database.db import get_db
 from src.database import models
+from src.utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 router = APIRouter(
     prefix="/tracking",
@@ -71,6 +74,7 @@ async def capture_event(
         db.add(new_event)
         db.commit()
         db.refresh(new_event)
+        logger.info("Captured tracked event id=%s type=%s user_id=%s", new_event.id, new_event.event_type, new_event.user_id)
 
         return {
             "status": "success",
@@ -86,11 +90,12 @@ async def capture_event(
         )
     except HTTPException:
         raise
-    except Exception as e:
+    except Exception:
         db.rollback()
+        logger.exception("Failed to capture tracking event")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to record tracking event: {str(e)}"
+            detail="Failed to record tracking event."
         )
 
 
@@ -109,6 +114,7 @@ def get_user_activity_history(
     """
     Retrieve recent activity history for a specific user.
     """
+    limit = max(1, min(limit, 100))
     activities = (
         db.query(models.UserActivity)
         .filter(models.UserActivity.user_id == user_id)
@@ -117,6 +123,7 @@ def get_user_activity_history(
         .all()
     )
 
+    logger.info("Returned %s activity events for user_id=%s", len(activities), user_id)
     return {
         "user_id": user_id,
         "count": len(activities),

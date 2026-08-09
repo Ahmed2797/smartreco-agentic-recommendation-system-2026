@@ -2,11 +2,14 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from src.config.settings import settings
+from src.utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 def send_email_digest(to_email: str, subject: str, html_content: str) -> bool:
     """Email Digest Delivery: Sends an HTML email digest to the specified recipient."""
     if not settings.SMTP_USER or not settings.SMTP_PASSWORD:
-        print(f"⚠️ [SMTP Warning] Credentials missing. Email to {to_email} skipped (Simulated delivery).")
+        logger.warning("SMTP credentials are missing; skipped digest delivery")
         return False
 
     try:
@@ -23,8 +26,8 @@ def send_email_digest(to_email: str, subject: str, html_content: str) -> bool:
             server.login(settings.SMTP_USER, settings.SMTP_PASSWORD)
             server.sendmail(settings.SENDER_EMAIL, to_email, msg.as_string())
 
-        print(f"✅ Email Digest successfully sent to: {to_email}")
+        logger.info("Email digest sent")
         return True
-    except Exception as e:
-        print(f"❌ Error sending email to {to_email}: {str(e)}")
+    except Exception:
+        logger.exception("Email digest delivery failed")
         return False

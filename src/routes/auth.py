@@ -1,20 +1,19 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Form, Request, Response
+from fastapi import APIRouter, Depends, HTTPException, status, Form, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
-from passlib.context import CryptContext
 from fastapi import Cookie
 
 from src.database.db import get_db
 from src.database import models
+from src.utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
 # Fix 1: Verify directory path relative to project root
 templates = Jinja2Templates(directory="frontend/templates")
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
 
 # --- Password Helpers ---
 import bcrypt
@@ -57,6 +56,7 @@ def register_user(
 ):
     existing_user = db.query(models.User).filter(models.User.email == email).first()
     if existing_user:
+        logger.warning("Registration rejected because email is already registered")
         return templates.TemplateResponse(
             "register.html",
             {"request": request, "error": "An account with this email already exists."},
@@ -78,10 +78,19 @@ def register_user(
 
     new_user = models.User(**user_kwargs)
 
-    db.add(new_user)
-    db.commit()
-    db.refresh(new_user)
+    try:
+        db.add(new_user)
+        db.commit()
+        db.refresh(new_user)
+    except Exception:
+        db.rollback()
+        logger.exception("Registration failed")
+        return templates.TemplateResponse(
+            "register.html", {"request": request, "error": "Unable to create account."},
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
 
+    logger.info("Registered user_id=%s", new_user.id)
     return RedirectResponse(url="/auth/login", status_code=status.HTTP_303_SEE_OTHER)
 
 
@@ -106,6 +115,7 @@ def login_user(
     hashed_pwd = getattr(user, "hashed_password", None) or getattr(user, "password_hash", "")
     
     if not user or not verify_password(password, hashed_pwd):
+        logger.warning("Failed login attempt")
         return templates.TemplateResponse(
             "login.html",
             {"request": request, "error": "Invalid email or password."}
@@ -114,34 +124,8 @@ def login_user(
     # Save session in HTTP-Only Cookie
     response = RedirectResponse(url="/dashboard", status_code=status.HTTP_303_SEE_OTHER)
     response.set_cookie(key="user_id", value=str(user.id), httponly=True)
+    logger.info("Authenticated user_id=%s", user.id)
     return response
-
-@router.post("/login")
-async def login_user(
-    request: Request,
-    email: str = Form(...),
-    password: str = Form(...),
-    db: Session = Depends(get_db)
-):
-    user = db.query(models.User).filter(models.User.email == email).first()
-    
-    if not user or not verify_password(password, user.hashed_password):
-        # raise HTTPException(status_code=400, detail="Invalid email or password")
-        return templates.TemplateResponse(
-                    "login.html",
-                    {"request": request, "error": "Invalid email or password."}
-                )
-
-
-    # Save session in HTTP-Only Cookie
-    response = RedirectResponse(url="/dashboard", status_code=status.HTTP_303_SEE_OTHER)
-    # response.set_cookie(key="user_id", value=str(user.id), httponly=True)
-    response.set_cookie(key="user_id", value=str(user.id), httponly=True, path="/")
-    return response
-
-    # # Set user_id cookie for isolated tracking per email
-    # request.set_cookie(key="user_id", value=str(user.id), httponly=True)
-    # return {"message": "Success", "user_id": user.id, "email": user.email}
 
 
 # =====================================
@@ -151,6 +135,7 @@ async def login_user(
 def logout():
     response = RedirectResponse(url="/auth/login", status_code=status.HTTP_303_SEE_OTHER)
     response.delete_cookie(key="user_id")
+    logger.info("User logged out")
     return response
 
 
