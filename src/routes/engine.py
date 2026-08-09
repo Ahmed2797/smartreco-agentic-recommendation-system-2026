@@ -3,6 +3,9 @@ from sqlalchemy.orm import Session
 from src.database import models
 from src.embeddings.embedding import get_text_embedding
 from src.embeddings.vector_store import search_similar_products
+from src.utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 
 class RecommendationEngine:
@@ -96,9 +99,9 @@ class RecommendationEngine:
                 )
                 self.db.add(rec_entry)
             self.db.commit()
-        except Exception as e:
+        except Exception:
             self.db.rollback()
-            print(f"Failed to save recommendations: {str(e)}")
+            logger.exception("Failed to save recommendations for user_id=%s", user_id)
 
 
 def generate_real_recommendations(user_id: int, db: Session, top_k: int = 5) -> List[models.Product]:
