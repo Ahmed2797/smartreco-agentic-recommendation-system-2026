@@ -6,6 +6,9 @@ from src.chatmodel.mesh_client import test_mesh_api
 from src.embeddings.embedding import get_text_embedding
 from src.embeddings.vector_store import search_similar_products
 from src.agent.langgraph_agent import run_agentic_recommendation
+from src.utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 
 def generate_behavioral_recommendation(user_events: list, available_products: list = None):
@@ -19,10 +22,19 @@ def generate_behavioral_recommendation(user_events: list, available_products: li
     ]) if user_events else "Popular trending products"
 
     # 1. Semantic Search Vector Embedding & Search
-    user_query_vector = get_text_embedding(activities_summary)
-    matches = search_similar_products(user_query_vector, top_k=3)
+    try:
+        user_query_vector = get_text_embedding(activities_summary)
+        matches = search_similar_products(user_query_vector, top_k=3)
+    except Exception:
+        logger.exception("Behavioral retrieval failed")
+        return "We could not personalize recommendations right now.", []
 
-    matched_ids = [int(m["id"]) for m in matches] if matches else []
+    matched_ids = []
+    for match in matches or []:
+        try:
+            matched_ids.append(int(match["id"]))
+        except (KeyError, TypeError, ValueError):
+            logger.warning("Ignoring vector result with invalid product id")
 
     # 2. Persuasive Narrative generation with LLM
     prompt = f"""
@@ -34,7 +46,11 @@ def generate_behavioral_recommendation(user_events: list, available_products: li
     explaining WHY these specific products match their recent intent.
     """
     
-    response = test_openai_api(prompt)
+    try:
+        response = test_openai_api(prompt)
+    except Exception:
+        logger.exception("Behavioral narrative generation failed")
+        response = "Here are products selected from your recent activity."
     return response, matched_ids
 
 
@@ -61,28 +77,36 @@ def generate_and_save_user_recommendation(user_id: int, db: Session):
     ]) if events else "popular tech gadgets"
 
     # 3. Vector Search on Pinecone
-    user_query_vector = get_text_embedding(activities_summary)
-    matches = search_similar_products(user_query_vector, top_k=3) # Returns [{'id': '101', 'score': 0.945}, ...]
+    try:
+        user_query_vector = get_text_embedding(activities_summary)
+        matches = search_similar_products(user_query_vector, top_k=3)
+        logger.exception("Recommendation retrieval for user_id=%s", user_id)
+
+    except Exception:
+        logger.exception("Recommendation retrieval failed for user_id=%s", user_id)
+        matches = []
 
     # 4. Clear previous recommendations for this user
-    db.query(models.Recommendation).filter(models.Recommendation.user_id == user_id).delete()
-
     saved_ids = []
-    if matches:
+    try:
+        db.query(models.Recommendation).filter(models.Recommendation.user_id == user_id).delete()
         for match in matches:
-            prod_id = int(match["id"])
-            vector_score = round(float(match["score"]), 2)  # Converts 0.945 -> 0.95
-            
-            rec = models.Recommendation(
-                user_id=user_id,
-                product_id=prod_id,
-                score=vector_score,  # 👈 Real vector score saved here
-                algorithm_used="pinecone_vector_v1"
-            )
-            db.add(rec)
+            try:
+                prod_id = int(match["id"])
+                vector_score = round(float(match.get("score", 0)), 2)
+            except (KeyError, TypeError, ValueError):
+                logger.warning("Ignoring invalid vector match for user_id=%s", user_id)
+                continue
+            db.add(models.Recommendation(
+                user_id=user_id, product_id=prod_id, score=vector_score,
+                algorithm_used="pinecone_vector_v1",
+            ))
             saved_ids.append(prod_id)
-            
         db.commit()
+        logger.info("Saved %s recommendations for user_id=%s", len(saved_ids), user_id)
+    except Exception:
+        db.rollback()
+        logger.exception("Failed to save recommendations for user_id=%s", user_id)
 
     # 6. Generate narrative via LLM using matched IDs
     prompt = f"""
@@ -92,7 +116,11 @@ def generate_and_save_user_recommendation(user_id: int, db: Session):
     
     Write a 2-sentence persuasive reason why these products fit their intent.
     """
-    narrative = test_mesh_api(prompt)
+    try:
+        narrative = test_openai_api(prompt)
+    except Exception:
+        logger.exception("Mesh narrative generation failed for user_id=%s", user_id)
+        narrative = "Here are products selected from your recent activity."
 
     return {
         "user_id": user_id,
