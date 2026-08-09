@@ -1,13 +1,14 @@
-from sqlalchemy import StaticPool, create_engine
+from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 from src.config.settings import settings
+from src.utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 engine = create_engine(
     settings.DATABASE_URL, 
     connect_args={"check_same_thread": False} if "sqlite" in settings.DATABASE_URL else {},
-    # poolclass=StaticPool
-    # if "sqlite" in settings.DATABASE_URL
-    # else None
+    pool_pre_ping=True,
 )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -17,5 +18,9 @@ def get_db():
     db = SessionLocal()
     try:
         yield db
+    except Exception:
+        db.rollback()
+        logger.exception("Database session failed and was rolled back")
+        raise
     finally:
         db.close()
