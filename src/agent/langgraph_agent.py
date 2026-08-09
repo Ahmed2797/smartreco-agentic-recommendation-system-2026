@@ -5,15 +5,19 @@ from langsmith import traceable
 
 # Custom Internal Imports
 from src.chatmodel.llm import test_openai_api
+# from src.chatmodel.mesh_client import test_mesh_api
 from src.embeddings.embedding import get_text_embedding
 from src.embeddings.vector_store import search_similar_products
 from src.prompt.recommendation_prompt import (
     get_behavior_analysis_prompt,
     get_persuasive_recommendation_prompt
 )
+from src.utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 # Ensure LangSmith Tracing Environment Variables are active
-os.environ["LANGCHAIN_TRACING_V2"] = os.getenv("LANGCHAIN_TRACING_V2", "true")
+os.environ["LANGCHAIN_TRACING_V2"] = os.getenv("LANGCHAIN_TRACING_V2", "false")
 os.environ["LANGCHAIN_ENDPOINT"] = os.getenv("LANGCHAIN_ENDPOINT", "https://api.smith.langchain.com")
 os.environ["LANGCHAIN_API_KEY"] = os.getenv("LANGCHAIN_API_KEY", "")
 os.environ["LANGCHAIN_PROJECT"] = os.getenv("LANGCHAIN_PROJECT", "smartreco-build-challenge-2026")
@@ -59,8 +63,11 @@ def analyze_behavior_node(state: RecommendationAgentState) -> Dict[str, Any]:
     actions_str = "; ".join(summarized_actions)
 
     prompt = get_behavior_analysis_prompt(actions_str)
-    response = test_openai_api(prompt)
-    # print(f"get_behavior_analysis_prompt{response}")
+    try:
+        response = test_openai_api(prompt)
+    except Exception:
+        logger.exception("Behavior analysis failed; using event summary")
+        response = f"Recent activity: {actions_str}"
 
     return {"user_summary": response}
 
@@ -72,10 +79,14 @@ def retrieve_products_node(state: RecommendationAgentState) -> Dict[str, Any]:
     summary = search_query if search_query else state.get("user_summary", "top rated products")
     
     # 1. Vector Search using text embeddings
-    query_vector = get_text_embedding(summary)
-    matches = search_similar_products(query_vector=query_vector, top_k=3)
-    
-    return {"retrieved_matches": matches or []}
+    try:
+        query_vector = get_text_embedding(summary)
+        matches = search_similar_products(query_vector=query_vector, top_k=5)
+        logger.info("Retrieved %s vector matches for user_id=%s", len(matches or []), state["user_id"])
+        return {"retrieved_matches": matches or []}
+    except Exception:
+        logger.exception("Product retrieval failed for user_id=%s", state["user_id"])
+        return {"retrieved_matches": []}
 
 
 @traceable(name="Evaluate and Refine Node")
@@ -121,7 +132,13 @@ def generate_persuasive_narrative_node(state: RecommendationAgentState) -> Dict[
         user_summary=search_query if search_query else summary,
         product_titles=product_titles
     )
-    response = test_openai_api(prompt)
+    if not product_titles:
+        return {"narrative": "Explore our featured products selected for you."}
+    try:
+        response = test_openai_api(prompt)
+    except Exception:
+        logger.exception("Narrative generation failed for user_id=%s", state["user_id"])
+        response = f"Based on your interests, we think {', '.join(product_titles[:3])} may be a great fit."
 
     return {"narrative": response}
 
@@ -173,13 +190,16 @@ def run_agentic_recommendation(
         "needs_refinement": False
     }
 
+    logger.info("Starting recommendation workflow for user_id=%s events=%s", user_id, len(user_events))
     final_state = langgraph_recommendation_app.invoke(
         initial_state,
         config={"run_name": f"User_{user_id}_Recommendation_Run"}
     )
 
-    return {
+    result = {
         "narrative": final_state.get("narrative", ""),
         "recommended_product_ids": final_state.get("filtered_product_ids", []),
         "user_summary": final_state.get("user_summary", "")
     }
+    logger.info("Completed recommendation workflow for user_id=%s recommendations=%s", user_id, len(result["recommended_product_ids"]))
+    return result
