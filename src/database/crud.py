@@ -3,6 +3,9 @@
 from typing import List, Optional
 from sqlalchemy.orm import Session
 from src.database import models
+from src.utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 
 # =====================================
@@ -17,11 +20,22 @@ def get_user_by_email(db: Session, email: str) -> Optional[models.User]:
     return db.query(models.User).filter(models.User.email == email).first()
 
 
-def create_user(db: Session, email: str, password: str, role: str = "user") -> models.User:
-    user = models.User(email=email, password=password, role=role)
-    db.add(user)
-    db.commit()
-    db.refresh(user)
+def create_user(db: Session, email: str, hashed_password: str, username: Optional[str] = None) -> models.User:
+    """Create a user using the fields defined by the User model."""
+    user = models.User(
+        email=email,
+        username=username or email.split("@", 1)[0],
+        hashed_password=hashed_password,
+    )
+    try:
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+    except Exception:
+        db.rollback()
+        logger.exception("Failed to create user")
+        raise
+    logger.info("Created user_id=%s", user.id)
     return user
 
 
@@ -81,17 +95,23 @@ def get_user_events(db: Session, user_id: int, limit: int = 20) -> List[models.U
 def save_recommendation(
     db: Session,
     user_id: int,
-    narrative: str,
-    recommended_product_ids: list
+    product_id: int,
+    score: float,
+    algorithm_used: str = "hybrid_v1",
 ) -> models.Recommendation:
+    """Persist one product recommendation (the database stores one row per product)."""
     recommendation = models.Recommendation(
-        user_id=user_id,
-        narrative=narrative,
-        recommended_product_ids=recommended_product_ids
+        user_id=user_id, product_id=product_id, score=score,
+        algorithm_used=algorithm_used,
     )
-    db.add(recommendation)
-    db.commit()
-    db.refresh(recommendation)
+    try:
+        db.add(recommendation)
+        db.commit()
+        db.refresh(recommendation)
+    except Exception:
+        db.rollback()
+        logger.exception("Failed to save recommendation for user_id=%s", user_id)
+        raise
     return recommendation
 
 
